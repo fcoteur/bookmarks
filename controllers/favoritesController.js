@@ -1,8 +1,30 @@
 var Favorite = require('../models/favorite');
+var Group = require('../models/group');
+var async = require('async');
+
+exports.index = function(req, res) {   
+    
+    async.parallel({
+        favorite_count: function(callback) {
+            Favorite.countDocuments({}, callback);
+        },
+        group_count: function(callback) {
+            Group.countDocuments({}, callback);
+        }
+    }, function(err, results) {
+        res.render('index', { title: 'List of Favorites', error: err, data: results });
+    });
+};
 
 // Display list of all Favorites.
 exports.favorite_list = function(req, res) {
-  res.send('NOT IMPLEMENTED: Favorite list');
+  Favorite.find({}, 'name')
+  .populate('group')
+  .exec(function (err, list_favorites) {
+    if (err) { return next(err); }
+    //Successful, so render
+    res.render('favorite_list', { title: 'Favorite List', favorite_list: list_favorites });
+  });
 };
 
 // Display detail page for a specific FAvorite.

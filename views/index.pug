@@ -2,4 +2,15 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to #[em Favorites], a very basic website developped with Node.js, Express and Mongo database.
+
+  h1 Content of this site
+
+  if error
+    p Error getting dynamic content.
+  else
+    p The site has the following record counts:
+
+    ul
+      li #[strong Favorites :] !{data.favorite_count}
+      li #[strong Groups :] !{data.group_count}
