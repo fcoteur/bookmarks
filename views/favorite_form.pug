@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='group') Group:
+      select#group.form-control(type='select' placeholder='Select group' name='group' required='true')
+        for group in group_list
+          if favorite
+            option(value=group._id selected=(favorite.group.toString()==group._id.toString() ? 'selected' : false)) #{group.name}
+          else
+            option(value=group._id) #{group.name}
+    div.form-group
+      label(for='name') Name:
+      input#name.form-control(type='text' placeholder='work, tools,...' name='name' required='true' value=(undefined===favorite ? '' : favorite.name) )
+      label(for='url') Url:
+      input#url.form-control(type='text' placeholder='http://google.com' name='url' required='true' value=(undefined===favorite ? '' : favorite.url))
+    
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors 
+    ul
+      for error in errors
+        li!= error.msg

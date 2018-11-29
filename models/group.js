@@ -9,4 +9,4 @@ var GroupSchema = new Schema(
 );
 
 //Export model
-module.exports = mongoose.model('Groupe', GroupSchema);
+module.exports = mongoose.model('Group', GroupSchema);

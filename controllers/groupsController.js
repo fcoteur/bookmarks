@@ -9,6 +9,7 @@ exports.group_list = function(req, res, next) {
       .exec(function (err, list_groups) {
         if (err) { return next(err); }
         // Successful, so render
+        console.log(list_groups)
         res.render('group_list', { title: 'Group List', group_list: list_groups });
       });
       

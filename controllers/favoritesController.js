@@ -2,6 +2,9 @@ var Favorite = require('../models/favorite');
 var Group = require('../models/group');
 var async = require('async');
 
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+
 exports.index = function(req, res) {   
     
     async.parallel({
@@ -33,14 +36,46 @@ exports.favorite_detail = function(req, res) {
 };
 
 // Display Favorite create form on GET.
-exports.favorite_create_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Favorite create GET');
+exports.favorite_create_get = function(req, res, next) {
+  Favorite.find({},'name')
+  .exec(function (err, favorites) {
+    if (err) { return next(err); }
+    // Successful, so render.
+    res.render('favorite_form', {title: 'Create Favorite', favorite_list:favorites});
+  });
 };
 
 // Handle Favorite create on POST.
-exports.favorite_create_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Favorite create POST');
-};
+exports.favorite_create_post = [
+  body('group').isLength({ min: 1 }).trim().withMessage('group must be specified.'),
+  body('name').isLength({ min: 1 }).trim().withMessage('name must be specified.'),
+  body('url').isLength({ min: 1 }).trim().withMessage('url must be specified.'),
+  sanitizeBody('group').trim().escape(),
+  sanitizeBody('name').trim().escape(),
+  sanitizeBody('url').trim().escape(),
+  (req, res, next) => {
+      const errors = validationResult(req);
+      var favorite = new Favorite(
+        { group: req.body.group,
+          name: req.body.name,
+          url: req.body.url
+         });
+      if (!errors.isEmpty()) {
+      Group.find({},'name')
+          .exec(function (err, groups) {
+              if (err) { return next(err); }
+              res.render('favorite_form', { name: 'Create Favorite', group_list : groups, selected_group : favorite.group._id , errors: errors.array(), favorite:favorite });
+      });
+      return;
+      }
+      else {
+          favorite.save(function (err) {
+              if (err) { return next(err); }
+                 res.redirect(favorite.url);
+              });
+      }
+  }
+];
 
 // Display Favorite delete form on GET.
 exports.favorite_delete_get = function(req, res) {
