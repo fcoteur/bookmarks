@@ -3,12 +3,11 @@ var Group = require('../models/group');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
-// Display list of all Group.
+// Display list of all Groups.
 exports.group_list = function(req, res, next) {
     Group.find()
       .exec(function (err, list_groups) {
         if (err) { return next(err); }
-        // Successful, so render
         console.log(list_groups)
         res.render('group_list', { title: 'Group List', group_list: list_groups });
       });

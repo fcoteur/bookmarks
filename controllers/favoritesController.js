@@ -37,11 +37,10 @@ exports.favorite_detail = function(req, res) {
 
 // Display Favorite create form on GET.
 exports.favorite_create_get = function(req, res, next) {
-  Favorite.find({},'name')
-  .exec(function (err, favorites) {
+  Group.find({},'name')
+  .exec(function (err, groups) {
     if (err) { return next(err); }
-    // Successful, so render.
-    res.render('favorite_form', {title: 'Create Favorite', favorite_list:favorites});
+    res.render('favorite_form', {title: 'Create Favorite', group_list:groups});
   });
 };
 
