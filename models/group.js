@@ -8,5 +8,12 @@ var GroupSchema = new Schema(
   }
 );
 
+// Virtual for group's URL
+GroupSchema
+.virtual('url')
+.get(function () {
+  return '/group/' + this._id;
+});
+
 //Export model
 module.exports = mongoose.model('Group', GroupSchema);

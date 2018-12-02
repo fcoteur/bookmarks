@@ -1,5 +1,7 @@
 var Favorite = require('../models/favorite');
 var Group = require('../models/group');
+var async = require('async');
+
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -15,8 +17,31 @@ exports.group_list = function(req, res, next) {
   };
 
 // Display detail page for a specific Group.
-exports.group_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Group detail: ' + req.params.id);
+exports.group_detail = function(req, res, next) {
+
+  async.parallel({
+      group: function(callback) {
+          Group.findById(req.params.id)
+            .exec(callback);
+      },
+
+      group_favorites: function(callback) {
+        Favorite.find({ 'group': req.params.id })
+        .exec(callback);
+      },
+
+  }, function(err, results) {
+      if (err) { return next(err); }
+      if (results.group==null) { // No results.
+          var err = new Error('Group not found');
+          err.status = 404;
+          return next(err);
+      }
+      // Successful, so render
+      console.log(group_favorites)
+      res.render('group_detail', { title: 'Group Detail', group: results.group, group_favorites: results.group_favorites } );
+  });
+
 };
 
 // Display Group create form on GET.

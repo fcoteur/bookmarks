@@ -5,9 +5,8 @@ block content
   
   ul
     each favorite in favorite_list
-      li #{favorite.name} 
+      li #{favorite.group[0].name} - #{favorite.name} - 
         a(href=favorite.url) #{favorite.url} 
-        |- #{favorite.group.name}
 
         
 

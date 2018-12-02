@@ -1,0 +1,17 @@
+extends layout
+
+block content
+
+  h1 Group: #{group.name}
+  
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Favorites
+    
+    ul
+    each favorite in groups_favorites
+      li 
+        a(href=favorite.url) #{favorite.name}
+
+    else
+      p This group has no favorites

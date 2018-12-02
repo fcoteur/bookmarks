@@ -21,11 +21,11 @@ exports.index = function(req, res) {
 
 // Display list of all Favorites.
 exports.favorite_list = function(req, res) {
-  Favorite.find({}, 'name')
+  Favorite.find({}, 'name url')
   .populate('group')
   .exec(function (err, list_favorites) {
     if (err) { return next(err); }
-    //Successful, so render
+    console.log(list_favorites)
     res.render('favorite_list', { title: 'Favorite List', favorite_list: list_favorites });
   });
 };
@@ -51,7 +51,6 @@ exports.favorite_create_post = [
   body('url').isLength({ min: 1 }).trim().withMessage('url must be specified.'),
   sanitizeBody('group').trim().escape(),
   sanitizeBody('name').trim().escape(),
-  sanitizeBody('url').trim().escape(),
   (req, res, next) => {
       const errors = validationResult(req);
       var favorite = new Favorite(
