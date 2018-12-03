@@ -5,7 +5,8 @@ block content
 
   ul
     each val in group_list
-      li #{val.name}
+      li 
+        a(href=val.url) #{val.name}
 
     else
       li There are no groups in the database.

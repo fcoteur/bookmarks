@@ -96,11 +96,11 @@ exports.group_delete_get = function(req, res, next) {
       },
   }, function(err, results) {
       if (err) { return next(err); }
-      if (results.author==null) { // No results.
+      if (results.group==null) { // No results.
           res.redirect('/groups');
       }
       // Successful, so render.
-      res.render('group_delete', { title: 'Delete Group', group: results.group, favorites_group: results.favorites_group } );
+      res.render('group_delete', { title: 'Delete Group', group: results.group, group_favorites: results.favorites_group } );
   });
 
 };
@@ -110,22 +110,22 @@ exports.group_delete_post = function(req, res, next) {
 
   async.parallel({
       group: function(callback) {
-        Group.findById(req.body._id).exec(callback)
+        Group.findById(req.body.id).exec(callback)
       },
       favorites_group: function(callback) {
-        Favorite.find({ 'group': req.body._id }).exec(callback)
+        Favorite.find({ 'group': req.body.id }).exec(callback)
       },
   }, function(err, results) {
       if (err) { return next(err); }
       // Success
       if (results.favorites_group.length > 0) {
           // Group has favorites. Render in same way as for GET route.
-          res.render('group_delete', { title: 'Delete Group', group: results.group, favorites_group: results.favorites_group } );
+          res.render('group_delete', { title: 'Delete Group', group: results.group, group_favorites: results.favorites_group } );
           return;
       }
       else {
           // Group has no favorites. Delete object and redirect to the list of groups.
-          Group.findByIdAndRemove(req.body._id, function deleteGroup(err) {
+          Group.findByIdAndRemove(req.body.id, function deleteGroup(err) {
               if (err) { return next(err); }
               // Success - go to author list
               res.redirect('/groups')

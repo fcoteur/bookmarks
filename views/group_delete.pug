@@ -12,10 +12,11 @@ block content
       h4 Favorites
     
       dl
-      each favortie in groups_favorites
+      each favorite in group_favorites
         dt 
-          #{favorite.group.name} - #{favorite.name} - 
-          a(href=favorite.url) #{favorite.url} 
+          a(href=favorite.url) #{favorite.name}
+          | - 
+          a(href=favorite.web) #{favorite.web} 
 
   else
     p Do you really want to delete this Group?
