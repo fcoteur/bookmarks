@@ -9,9 +9,15 @@ block content
     h4 Favorites
     
     ul
-    each favorite in groups_favorites
+    each favorite in group_favorites
       li 
         a(href=favorite.url) #{favorite.name}
 
     else
       p This group has no favorites
+
+  hr
+  p
+    a(href=group.url+'/delete') Delete Group
+  p
+    a(href=group.url+'/update') Update Group

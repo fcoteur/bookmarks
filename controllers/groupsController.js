@@ -38,7 +38,6 @@ exports.group_detail = function(req, res, next) {
           return next(err);
       }
       // Successful, so render
-      console.log(group_favorites)
       res.render('group_detail', { title: 'Group Detail', group: results.group, group_favorites: results.group_favorites } );
   });
 
@@ -86,21 +85,100 @@ exports.group_create_post = [
   ];
 
 // Display Group delete form on GET.
-exports.group_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Group delete GET');
+exports.group_delete_get = function(req, res, next) {
+
+  async.parallel({
+      group: function(callback) {
+          Group.findById(req.params.id).exec(callback)
+      },
+      favorites_group: function(callback) {
+        Favorite.find({ 'group': req.params.id }).exec(callback)
+      },
+  }, function(err, results) {
+      if (err) { return next(err); }
+      if (results.author==null) { // No results.
+          res.redirect('/groups');
+      }
+      // Successful, so render.
+      res.render('group_delete', { title: 'Delete Group', group: results.group, favorites_group: results.favorites_group } );
+  });
+
 };
 
 // Handle Group delete on POST.
-exports.group_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Group delete POST');
+exports.group_delete_post = function(req, res, next) {
+
+  async.parallel({
+      group: function(callback) {
+        Group.findById(req.body._id).exec(callback)
+      },
+      favorites_group: function(callback) {
+        Favorite.find({ 'group': req.body._id }).exec(callback)
+      },
+  }, function(err, results) {
+      if (err) { return next(err); }
+      // Success
+      if (results.favorites_group.length > 0) {
+          // Group has favorites. Render in same way as for GET route.
+          res.render('group_delete', { title: 'Delete Group', group: results.group, favorites_group: results.favorites_group } );
+          return;
+      }
+      else {
+          // Group has no favorites. Delete object and redirect to the list of groups.
+          Group.findByIdAndRemove(req.body._id, function deleteGroup(err) {
+              if (err) { return next(err); }
+              // Success - go to author list
+              res.redirect('/groups')
+          })
+      }
+  });
 };
 
 // Display Group update form on GET.
-exports.group_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Group update GET');
+exports.group_update_get = function(req, res, next) {
+
+  async.parallel({
+      group: function(callback) {
+          Group.findById(req.params.id).exec(callback);
+      }
+      }, function(err, results) {
+          if (err) { return next(err); }
+          if (results.group==null) { // No results.
+              var err = new Error('Genre not found');
+              err.status = 404;
+              return next(err);
+          }
+          // Success.
+          res.render('group_form', { title: 'Update Group', group:results.group, errors: [] });
+      });
+
 };
 
 // Handle Group update on POST.
-exports.group_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Group update POST');
-};
+exports.group_update_post = [
+  body('name', 'Name must not be empty.').isLength({ min: 1 }).trim(),
+  sanitizeBody('name').trim().escape(),
+  (req, res, next) => {
+      // Extract the validation errors from a request.
+      const errors = validationResult(req);
+
+      // Create a Group object with escaped/trimmed data and old id.
+      var group = new Group(
+        { name: req.body.name,
+          _id:req.params.id
+         });
+
+      if (!errors.isEmpty()) {
+              res.render('group_form', { title: 'Update Group',group:group, errors: errors.array() });
+          return;
+      }
+      else {
+          // Data from form is valid. Update the record.
+          Group.findByIdAndUpdate(req.params.id, group, {}, function (err,thegroup) {
+              if (err) { return next(err); }
+                 // Successful - redirect to book detail page.
+                 res.redirect(thegroup.url);
+              });
+      }
+  }
+];

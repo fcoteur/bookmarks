@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{title}: #{favorite.name}
+  
+  p Do you really want to delete this Favorite?
+    
+    form(method='POST' action='')
+      div.form-group
+        input#favoriteid.form-control(type='hidden',name='favoriteid', required='true', value=favorite._id )
+
+      button.btn.btn-primary(type='submit') Delete

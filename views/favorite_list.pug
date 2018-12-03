@@ -5,10 +5,8 @@ block content
   
   ul
     each favorite in favorite_list
-      li #{favorite.group[0].name} - #{favorite.name} - 
-        a(href=favorite.url) #{favorite.url} 
-
-        
+      li #{favorite.group.name} - #{favorite.name} - 
+        a(href=favorite.web) #{favorite.web} 
 
     else
       li There are no favorites.

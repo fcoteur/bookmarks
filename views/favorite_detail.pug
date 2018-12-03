@@ -1,0 +1,14 @@
+extends layout
+
+block content
+
+  h1 Favorite: #{favorite.name}
+  
+  li 
+    a(href=favorite.web) #{favorite.name}
+
+  hr
+  p
+    a(href=favorite.url+'/delete') Delete Favorite
+  p
+    a(href=favorite.url+'/update') Update Favorite

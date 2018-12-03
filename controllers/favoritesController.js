@@ -21,7 +21,7 @@ exports.index = function(req, res) {
 
 // Display list of all Favorites.
 exports.favorite_list = function(req, res) {
-  Favorite.find({}, 'name url')
+  Favorite.find({}, 'name web')
   .populate('group')
   .exec(function (err, list_favorites) {
     if (err) { return next(err); }
@@ -31,9 +31,26 @@ exports.favorite_list = function(req, res) {
 };
 
 // Display detail page for a specific FAvorite.
-exports.favorite_detail = function(req, res) {
-  res.send('NOT IMPLEMENTED: FAvorite detail: ' + req.params.id);
-};
+exports.favorite_detail = function(req, res, next) {
+
+    async.parallel({
+        favorite: function(callback) {
+            Favorite.findById(req.params.id)
+              .exec(callback);
+        }  
+    }, function(err, results) {
+        if (err) { return next(err); }
+        if (results.favorite==null) { // No results.
+            var err = new Error('Favorite not found');
+            err.status = 404;
+            return next(err);
+        }
+        // Successful, so render
+        res.render('favorite_detail', { title: 'Favorite Detail', favorite: results.favorite } );
+    });
+  
+  };
+  
 
 // Display Favorite create form on GET.
 exports.favorite_create_get = function(req, res, next) {
@@ -48,7 +65,7 @@ exports.favorite_create_get = function(req, res, next) {
 exports.favorite_create_post = [
   body('group').isLength({ min: 1 }).trim().withMessage('group must be specified.'),
   body('name').isLength({ min: 1 }).trim().withMessage('name must be specified.'),
-  body('url').isLength({ min: 1 }).trim().withMessage('url must be specified.'),
+  body('web').isLength({ min: 1 }).trim().withMessage('web must be specified.'),
   sanitizeBody('group').trim().escape(),
   sanitizeBody('name').trim().escape(),
   (req, res, next) => {
@@ -56,7 +73,7 @@ exports.favorite_create_post = [
       var favorite = new Favorite(
         { group: req.body.group,
           name: req.body.name,
-          url: req.body.url
+          web: req.body.web
          });
       if (!errors.isEmpty()) {
       Group.find({},'name')
@@ -76,13 +93,39 @@ exports.favorite_create_post = [
 ];
 
 // Display Favorite delete form on GET.
-exports.favorite_delete_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Favorite delete GET');
-};
+exports.favorite_delete_get = function(req, res, next) {
 
+  async.parallel({
+      favorite: function(callback) {
+          Favorite.findById(req.params.id).exec(callback)
+      }
+  }, function(err, results) {
+      if (err) { return next(err); }
+      if (results.favorite==null) { // No results.
+          res.redirect('/favorites');
+      }
+      // Successful, so render.
+      res.render('favorite_delete', { title: 'Delete Favorite', favorite: results.favorite } );
+  });
+
+};
 // Handle Favorite delete on POST.
-exports.favorite_delete_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Favorite delete POST');
+exports.favorite_delete_post = function(req, res, next) {
+
+  async.parallel({
+      favorite: function(callback) {
+        Favorite.findById(req.body.favoriteid).exec(callback)
+      }
+  }, function(err, results) {
+      if (err) { return next(err); }
+      // Success
+      // Delete object and redirect to the list of authors.
+      Favorite.findByIdAndRemove(req.body.favoriteid, function deleteFavorite(err) {
+          if (err) { return next(err); }
+          // Success - go to favorite list
+          res.redirect('/favorites')
+      })
+  });
 };
 
 // Display Favorite update form on GET.
