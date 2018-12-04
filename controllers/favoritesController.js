@@ -101,7 +101,7 @@ exports.favorite_delete_get = function(req, res, next) {
   }, function(err, results) {
       if (err) { return next(err); }
       if (results.favorite==null) { // No results.
-          res.redirect('/favorites');
+          res.redirect('/bookmarks/favorites');
       }
       // Successful, so render.
       res.render('favorite_delete', { title: 'Delete Favorite', favorite: results.favorite } );
@@ -122,7 +122,7 @@ exports.favorite_delete_post = function(req, res, next) {
       Favorite.findByIdAndRemove(req.body.favoriteid, function deleteFavorite(err) {
           if (err) { return next(err); }
           // Success - go to favorite list
-          res.redirect('/favorites')
+          res.redirect('/bookmarks/favorites')
       })
   });
 };

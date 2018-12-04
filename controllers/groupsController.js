@@ -96,7 +96,7 @@ exports.group_delete_get = function(req, res, next) {
   }, function(err, results) {
       if (err) { return next(err); }
       if (results.group==null) { // No results.
-          res.redirect('/groups');
+          res.redirect('/bookmarks/groups');
       }
       // Successful, so render.
       res.render('group_delete', { title: 'Delete Group', group: results.group, group_favorites: results.favorites_group } );
@@ -127,7 +127,7 @@ exports.group_delete_post = function(req, res, next) {
           Group.findByIdAndRemove(req.body.groupid, function deleteGroup(err) {
               if (err) { return next(err); }
               // Success - go to author list
-              res.redirect('/groups')
+              res.redirect('/bookmarks/groups')
           })
       }
   });
