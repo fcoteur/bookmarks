@@ -12,7 +12,7 @@ var GroupSchema = new Schema(
 GroupSchema
 .virtual('url')
 .get(function () {
-  return '/group/' + this._id;
+  return '/bookmarks/group/' + this._id;
 });
 
 //Export model

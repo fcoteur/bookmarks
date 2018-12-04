@@ -14,7 +14,7 @@ var FavoriteSchema = new Schema(
 FavoriteSchema
 .virtual('url')
 .get(function () {
-  return '/favorite/' + this._id;
+  return '/bookmarks/favorite/' + this._id;
 });
 
 
