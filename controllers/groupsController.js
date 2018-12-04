@@ -10,7 +10,6 @@ exports.group_list = function(req, res, next) {
     Group.find()
       .exec(function (err, list_groups) {
         if (err) { return next(err); }
-        console.log(list_groups)
         res.render('group_list', { title: 'Group List', group_list: list_groups });
       });
       
@@ -110,10 +109,10 @@ exports.group_delete_post = function(req, res, next) {
 
   async.parallel({
       group: function(callback) {
-        Group.findById(req.body.id).exec(callback)
+        Group.findById(req.body.groupid).exec(callback)
       },
       favorites_group: function(callback) {
-        Favorite.find({ 'group': req.body.id }).exec(callback)
+        Favorite.find({ 'group': req.body.groupid }).exec(callback)
       },
   }, function(err, results) {
       if (err) { return next(err); }
@@ -125,7 +124,7 @@ exports.group_delete_post = function(req, res, next) {
       }
       else {
           // Group has no favorites. Delete object and redirect to the list of groups.
-          Group.findByIdAndRemove(req.body.id, function deleteGroup(err) {
+          Group.findByIdAndRemove(req.body.groupid, function deleteGroup(err) {
               if (err) { return next(err); }
               // Success - go to author list
               res.redirect('/groups')

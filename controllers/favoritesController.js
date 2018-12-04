@@ -25,7 +25,6 @@ exports.favorite_list = function(req, res) {
   .populate('group')
   .exec(function (err, list_favorites) {
     if (err) { return next(err); }
-    console.log(list_favorites)
     res.render('favorite_list', { title: 'Favorite List', favorite_list: list_favorites });
   });
 };
