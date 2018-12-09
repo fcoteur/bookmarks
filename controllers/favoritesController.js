@@ -5,20 +5,6 @@ var async = require('async');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
-exports.index = function(req, res) {   
-    
-    async.parallel({
-        favorite_count: function(callback) {
-            Favorite.countDocuments({}, callback);
-        },
-        group_count: function(callback) {
-            Group.countDocuments({}, callback);
-        }
-    }, function(err, results) {
-        res.render('index', { title: 'List of Favorites', error: err, data: results });
-    });
-};
-
 // Display list of all Favorites.
 exports.favorite_list = function(req, res) {
   Favorite.find({}, 'name web')

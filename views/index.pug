@@ -14,3 +14,11 @@ block content
     ul
       li #[strong Favorites :] !{data.favorite_count}
       li #[strong Groups :] !{data.group_count}
+
+  if (!user)
+    a(href="/login") Login
+    br
+    a(href="/register") Register
+  if (user)
+    p You are currently logged in as #{user.username}
+    a(href="/logout") Logout

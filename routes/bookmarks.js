@@ -4,9 +4,6 @@ var router = express.Router();
 var favorite_controller = require('../controllers/favoritesController');
 var group_controller = require('../controllers/groupsController');
 
-// GET request to home page
-router.get('/', favorite_controller.index);
-
 /// FAVORITE ROUTES ///
 
 // GET request for creating Author. NOTE This must come before route for id (i.e. display author).
