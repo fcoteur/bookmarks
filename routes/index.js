@@ -9,6 +9,10 @@ var Group = require('../models/group');
 var router = express.Router();
 
 router.get('/', function (req, res) {
+    res.redirect('/bookmarks')
+});
+
+router.get('/bookmarks', function (req, res) {
   async.parallel({
     favorite_count: function(callback) {
         Favorite.countDocuments({}, callback);
