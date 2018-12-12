@@ -3,7 +3,7 @@ var passport = require('passport');
 var async = require('async');
 
 var Account = require('../models/account');
-var Favorite = require('../models/favorite');
+var Bookmark = require('../models/bookmark');
 var Group = require('../models/group');
 
 var router = express.Router();
@@ -14,14 +14,14 @@ router.get('/', function (req, res) {
 
 router.get('/bookmarks', function (req, res) {
   async.parallel({
-    favorite_count: function(callback) {
-        Favorite.countDocuments({}, callback);
+    bookmark_count: function(callback) {
+        Bookmark.countDocuments({}, callback);
     },
     group_count: function(callback) {
         Group.countDocuments({}, callback);
     }
   }, function(err, results) {
-      res.render('index', { title: 'List of Favorites', error: err, data: results, user: req.user });
+      res.render('index', { title: 'List of Bookmarks', error: err, data: results, user: req.user });
   });
 });
 
@@ -53,11 +53,5 @@ router.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
-
-router.get('/ping', function(req, res){
-    res.status(200).send("pong!");
-});
-
-module.exports = router;
 
 module.exports = router;

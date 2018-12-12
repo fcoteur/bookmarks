@@ -1,19 +1,19 @@
 var express = require('express');
 var router = express.Router();
 
-var favorite_controller = require('../controllers/favoritesController');
+var bookmark_controller = require('../controllers/bookmarksController');
 var group_controller = require('../controllers/groupsController');
 
 /// FAVORITE ROUTES ///
 
-router.get('/favorite/create', checkAuthentication, favorite_controller.favorite_create_get);
-router.post('/favorite/create',checkAuthentication, favorite_controller.favorite_create_post);
-router.get('/favorite/:id/delete',checkAuthentication, favorite_controller.favorite_delete_get);
-router.post('/favorite/:id/delete',checkAuthentication, favorite_controller.favorite_delete_post);
-router.get('/favorite/:id/update',checkAuthentication, favorite_controller.favorite_update_get);
-router.post('/favorite/:id/update',checkAuthentication, favorite_controller.favorite_update_post);
-router.get('/favorite/:id', favorite_controller.favorite_detail);
-router.get('/favorites', favorite_controller.favorite_list);
+router.get('/bookmark/create', checkAuthentication, bookmark_controller.bookmark_create_get);
+router.post('/bookmark/create',checkAuthentication, bookmark_controller.bookmark_create_post);
+router.get('/bookmark/:id/delete',checkAuthentication, bookmark_controller.bookmark_delete_get);
+router.post('/bookmark/:id/delete',checkAuthentication, bookmark_controller.bookmark_delete_post);
+router.get('/bookmark/:id/update',checkAuthentication, bookmark_controller.bookmark_update_get);
+router.post('/bookmark/:id/update',checkAuthentication, bookmark_controller.bookmark_update_post);
+router.get('/bookmark/:id', bookmark_controller.bookmark_detail);
+router.get('/bookmarks', bookmark_controller.bookmark_list);
 
 /// GROUP ROUTES ///
 

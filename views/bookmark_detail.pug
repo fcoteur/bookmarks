@@ -1,0 +1,14 @@
+extends layout
+
+block content
+
+  h1 bookmark: #{bookmark.name}
+  
+  li #{bookmark.name} - 
+    a(href=bookmark.web) #{bookmark.web}
+
+  hr
+  p
+    a(href=bookmark.url+'/delete') Delete Bookmark
+  p
+    a(href=bookmark.url+'/update') Update Bookmark

@@ -2,18 +2,23 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #[em Favorites], a very basic website developped with Node.js, Express and Mongo database.
+  p Welcome to #[em Bookmarks], a very basic website developped with Node.js, Express and Mongo database.
 
-  h1 Content of this site
+  h2 Content of this site
 
   if error
     p Error getting dynamic content.
   else
-    p The site has the following record counts:
-
     ul
-      li #[strong Favorites :] !{data.favorite_count}
+      li #[strong Bookmarks :] !{data.bookmark_count}
       li #[strong Groups :] !{data.group_count}
+    
+    br
+    a(href='/bookmarks/bookmarks') Go to list of bookmarks
+    br
+    a(href='/bookmarks/groups') Go to list of groups
+
+  h2 Login to edit content
 
   if (!user)
     a(href="/login") Login

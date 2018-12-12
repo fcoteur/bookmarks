@@ -3,20 +3,20 @@ extends layout
 block content
   h1 #{title}: #{group.name}
   
-  if group_favorites.length
+  if group_bookmarks.length
   
-    p #[strong Delete the following favorites before attempting to delete this group.]
+    p #[strong Delete the following bookmarks before attempting to delete this group.]
   
     div(style='margin-left:20px;margin-top:20px')
 
-      h4 Favorites
+      h4 Bookmarks
     
       dl
-      each favorite in group_favorites
+      each bookmark in group_bookmarks
         dt 
-          a(href=favorite.url) #{favorite.name}
+          a(href=bookmark.url) #{bookmark.name}
           | - 
-          a(href=favorite.web) #{favorite.web} 
+          a(href=bookmark.web) #{bookmark.web} 
 
   else
     p Do you really want to delete this Group?

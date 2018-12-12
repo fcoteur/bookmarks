@@ -1,4 +1,4 @@
-var Favorite = require('../models/favorite');
+var Bookmark = require('../models/bookmark');
 var Group = require('../models/group');
 var async = require('async');
 
@@ -24,8 +24,8 @@ exports.group_detail = function(req, res, next) {
             .exec(callback);
       },
 
-      group_favorites: function(callback) {
-        Favorite.find({ 'group': req.params.id })
+      group_bookmarks: function(callback) {
+        Bookmark.find({ 'group': req.params.id })
         .exec(callback);
       },
 
@@ -37,7 +37,7 @@ exports.group_detail = function(req, res, next) {
           return next(err);
       }
       // Successful, so render
-      res.render('group_detail', { title: 'Group Detail', group: results.group, group_favorites: results.group_favorites } );
+      res.render('group_detail', { title: 'Group Detail', group: results.group, group_bookmarks: results.group_bookmarks } );
   });
 
 };
@@ -61,19 +61,16 @@ exports.group_create_post = [
       return;
       }
       else {
-        // Check if Group with same name already exists.
         Group.findOne({ 'name': req.body.name })
           .exec( function(err, found_group) {
              if (err) { return next(err); }
              if (found_group) {
-               // Group exists, redirect to its detail page.
                res.redirect(found_group.url);
              }
              else {
                group.save(function (err) {
                  if (err) { return next(err); }
-                 // Genre saved. Redirect to genre detail page.
-                 res.redirect(group.url);
+                 res.redirect('/bookmarks/groups');
                });
   
              }
@@ -90,8 +87,8 @@ exports.group_delete_get = function(req, res, next) {
       group: function(callback) {
           Group.findById(req.params.id).exec(callback)
       },
-      favorites_group: function(callback) {
-        Favorite.find({ 'group': req.params.id }).exec(callback)
+      bookmarks_group: function(callback) {
+        Bookmark.find({ 'group': req.params.id }).exec(callback)
       },
   }, function(err, results) {
       if (err) { return next(err); }
@@ -99,7 +96,7 @@ exports.group_delete_get = function(req, res, next) {
           res.redirect('/bookmarks/groups');
       }
       // Successful, so render.
-      res.render('group_delete', { title: 'Delete Group', group: results.group, group_favorites: results.favorites_group } );
+      res.render('group_delete', { title: 'Delete Group', group: results.group, group_bookmarks: results.bookmarks_group } );
   });
 
 };
@@ -111,19 +108,19 @@ exports.group_delete_post = function(req, res, next) {
       group: function(callback) {
         Group.findById(req.body.groupid).exec(callback)
       },
-      favorites_group: function(callback) {
-        Favorite.find({ 'group': req.body.groupid }).exec(callback)
+      bookmarks_group: function(callback) {
+        Bookmark.find({ 'group': req.body.groupid }).exec(callback)
       },
   }, function(err, results) {
       if (err) { return next(err); }
       // Success
-      if (results.favorites_group.length > 0) {
-          // Group has favorites. Render in same way as for GET route.
-          res.render('group_delete', { title: 'Delete Group', group: results.group, group_favorites: results.favorites_group } );
+      if (results.bookmarks_group.length > 0) {
+          // Group has bookmarks. Render in same way as for GET route.
+          res.render('group_delete', { title: 'Delete Group', group: results.group, group_bookmarks: results.bookmarks_group } );
           return;
       }
       else {
-          // Group has no favorites. Delete object and redirect to the list of groups.
+          // Group has no bookmarks. Delete object and redirect to the list of groups.
           Group.findByIdAndRemove(req.body.groupid, function deleteGroup(err) {
               if (err) { return next(err); }
               // Success - go to author list
@@ -175,7 +172,7 @@ exports.group_update_post = [
           // Data from form is valid. Update the record.
           Group.findByIdAndUpdate(req.params.id, group, {}, function (err,thegroup) {
               if (err) { return next(err); }
-                 // Successful - redirect to book detail page.
+                 // Successful - redirect to group detail page.
                  res.redirect(thegroup.url);
               });
       }

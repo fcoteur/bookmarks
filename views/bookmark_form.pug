@@ -8,15 +8,15 @@ block content
       label(for='group') Group:
       select#group.form-control(type='select' placeholder='Select group' name='group' required='true')
         for group in group_list
-          if favorite
-            option(value=group._id selected=(favorite.group.toString()==group._id.toString() ? 'selected' : false)) #{group.name}
+          if bookmark
+            option(value=group._id selected=(bookmark.group.toString()==group._id.toString() ? 'selected' : false)) #{group.name}
           else
             option(value=group._id) #{group.name}
     div.form-group
       label(for='name') Name:
-      input#name.form-control(type='text' placeholder='work, tools,...' name='name' required='true' value=(undefined===favorite ? '' : favorite.name) )
+      input#name.form-control(type='text' placeholder='work, tools,...' name='name' required='true' value=(undefined===bookmark ? '' : bookmark.name) )
       label(for='web') Url:
-      input#web.form-control(type='text' placeholder='http://google.com' name='web' required='true' value=(undefined===favorite ? '' : favorite.web))
+      input#web.form-control(type='text' placeholder='http://google.com' name='web' required='true' value=(undefined===bookmark ? '' : bookmark.web))
     
     button.btn.btn-primary(type='submit') Submit
 
