@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+    each bookmark in bookmark_list
+      li #{bookmark.group.name} - 
+        a(href=bookmark.url) #{bookmark.name}
+        | - 
+        a(href=bookmark.web) #{bookmark.web} 
+
+    else
+      li There are no bookmarks.

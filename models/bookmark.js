@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var FavoriteSchema = new Schema(
+var BookmarkSchema = new Schema(
   {
     name: {type: String, required: true, max: 100},
     web: {type: String, required: true, max: 100},
@@ -10,13 +10,13 @@ var FavoriteSchema = new Schema(
   }
 );
 
-// Virtual for favorite's URL
-FavoriteSchema
+// Virtual for bookmark's URL
+BookmarkSchema
 .virtual('url')
 .get(function () {
-  return '/bookmarks/favorite/' + this._id;
+  return '/bookmarks/bookmark/' + this._id;
 });
 
 
 //Export model
-module.exports = mongoose.model('Favorite', FavoriteSchema);
+module.exports = mongoose.model('Bookmark', BookmarkSchema);

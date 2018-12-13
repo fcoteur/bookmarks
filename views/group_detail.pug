@@ -6,15 +6,15 @@ block content
   
   div(style='margin-left:20px;margin-top:20px')
 
-    h4 Favorites
+    h4 Bookmarks
     
     ul
-    each favorite in group_favorites
+    each bookmark in group_bookmarks
       li 
-        a(href=favorite.url) #{favorite.name}
+        a(href=bookmark.url) #{bookmark.name}
 
     else
-      p This group has no favorites
+      p This group has no bookmarks
 
   hr
   p

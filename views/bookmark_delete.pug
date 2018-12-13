@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{title}: #{bookmark.name}
+  
+  p Do you really want to delete this Bookmark?
+    
+    form(method='POST' action='')
+      div.form-group
+        input#bookmarkid.form-control(type='hidden',name='bookmarkid', required='true', value=bookmark._id )
+
+      button.btn.btn-primary(type='submit') Delete
